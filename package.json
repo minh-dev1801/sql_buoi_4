@@ -2,6 +2,7 @@
   "name": "bai_tap_node_49",
   "version": "1.0.0",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --import=extensionless/register server.js"
@@ -21,6 +22,7 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "mysql2": "^3.14.1",
+    "nodemon": "^3.1.10",
     "prisma": "^6.8.2"
   }
 }

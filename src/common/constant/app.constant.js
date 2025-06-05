@@ -1,4 +1,5 @@
 import "dotenv/config";
+import chalk from "chalk";
 
 export const DATABASE_URL = process.env.DATABASE_URL;
 

@@ -1,11 +1,12 @@
 import express from "express";
-import likeResRouter from "./likeRes.router";
-import rateResRouter from "./rateRes.router";
+import orderRouter from "./order.router";
+import likeRouter from "./like.router";
+import rateRouter from "./rate.router";
 
 const rootRouter = express.Router();
 
-rootRouter.use("/like-res", likeResRouter);
-rootRouter.use("/rate-res", rateResRouter);
+rootRouter.use("/like", likeRouter);
+rootRouter.use("/rate", rateRouter);
 rootRouter.use("/order", orderRouter);
 
 export default rootRouter;

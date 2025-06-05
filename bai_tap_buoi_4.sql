@@ -4,71 +4,164 @@ USE db_exercise;
 
 DROP DATABASE db_exercise;
 
+ALTER TABLE `like_res` ADD CONSTRAINT `unique_user_res` UNIQUE (`user_id`, `res_id`);
+
+ALTER TABLE `rate_res` ADD CONSTRAINT UNIQUE (`user_id`, `res_id`);
+
+ALTER TABLE `sub_food` ADD CONSTRAINT UNIQUE (`sub_name`, `food_id`);
+
+ALTER TABLE `rate_res` MODIFY `date_rate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+ALTER TABLE `like_res` MODIFY `date_like` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+SELECT `date_rate` FROM `rate_res` WHERE `date_rate` IS NOT NULL;
+
+DESCRIBE `rate_res`;
+
+SELECT * FROM `orders` WHERE `user_id` = 1;
+
+
 CREATE TABLE IF NOT EXISTS `users` (
-    `user_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    
     `full_name` VARCHAR(255),
     `email` VARCHAR(255),
     `password` VARCHAR(255)
+    
+    -- mặc định luôn luôn có
+	`deletedBy` INT NOT NULL DEFAULT 0,
+	`isDeleted` TINYINT(1) NOT NULL DEFAULT 0,
+	`deletedAt` TIMESTAMP NULL DEFAULT NULL,
+	`createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS `restaurants` (
-    `res_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    
     `res_name` VARCHAR(255),
     `image` VARCHAR(255),
     `desc` VARCHAR(255)
+    
+    -- mặc định luôn luôn có
+	`deletedBy` INT NOT NULL DEFAULT 0,
+	`isDeleted` TINYINT(1) NOT NULL DEFAULT 0,
+	`deletedAt` TIMESTAMP NULL DEFAULT NULL,
+	`createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS `food_type` (
-    `food_type_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    
     `type_name` VARCHAR(255)
+    
+    -- mặc định luôn luôn có
+	`deletedBy` INT NOT NULL DEFAULT 0,
+	`isDeleted` TINYINT(1) NOT NULL DEFAULT 0,
+	`deletedAt` TIMESTAMP NULL DEFAULT NULL,
+	`createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS `foods` (
-    `food_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    
     `food_name` VARCHAR(255),
     `image` VARCHAR(255),
     `price` FLOAT,
     `desc` VARCHAR(255),
     `type_id` INT,
+    
+    -- ràng buộc
     FOREIGN KEY (`type_id`) REFERENCES `food_type`(`food_type_id`)
+    
+    -- mặc định luôn luôn có
+	`deletedBy` INT NOT NULL DEFAULT 0,
+	`isDeleted` TINYINT(1) NOT NULL DEFAULT 0,
+	`deletedAt` TIMESTAMP NULL DEFAULT NULL,
+	`createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS `sub_food` (
-    `sub_food_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    
     `sub_name` VARCHAR(255),
     `sub_price` FLOAT,
     `food_id` INT,
+    
+    -- ràng buộc
     FOREIGN KEY (`food_id`) REFERENCES `foods`(`food_id`)
+    
+    -- mặc định luôn luôn có
+	`deletedBy` INT NOT NULL DEFAULT 0,
+	`isDeleted` TINYINT(1) NOT NULL DEFAULT 0,
+	`deletedAt` TIMESTAMP NULL DEFAULT NULL,
+	`createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS `orders` (
-    `order_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    
     `user_id` INT,
     `food_id` INT,
     `amount` INT,
     `code` VARCHAR(255),
     `arr_sub_id` VARCHAR(255),
+    
+    -- ràng buộc
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
     FOREIGN KEY (`food_id`) REFERENCES `foods`(`food_id`)
+    
+    -- mặc định luôn luôn có
+	`deletedBy` INT NOT NULL DEFAULT 0,
+	`isDeleted` TINYINT(1) NOT NULL DEFAULT 0,
+	`deletedAt` TIMESTAMP NULL DEFAULT NULL,
+	`createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS `rate_res` (
-    `rate_res_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    
     `user_id` INT,
     `res_id` INT,
     `amount` INT,
     `date_rate` DATETIME,
+    
+    -- ràng buộc
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
     FOREIGN KEY (`res_id`) REFERENCES `restaurants`(`res_id`)
+    
+    -- mặc định luôn luôn có
+	`deletedBy` INT NOT NULL DEFAULT 0,
+	`isDeleted` TINYINT(1) NOT NULL DEFAULT 0,
+	`deletedAt` TIMESTAMP NULL DEFAULT NULL,
+	`createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS `like_res` (
-    `like_res_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    
     `user_id` INT,
     `res_id` INT,
+    `is_like` BOOLEAN DEFAULT 1 CHECK (`is_like` IN (0, 1)),
+
     `date_like` DATETIME,
+    
+    -- ràng buộc
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
     FOREIGN KEY (`res_id`) REFERENCES `restaurants`(`res_id`)
+    
+    -- mặc định luôn luôn có
+	`deletedBy` INT NOT NULL DEFAULT 0,
+	`isDeleted` TINYINT(1) NOT NULL DEFAULT 0,
+	`deletedAt` TIMESTAMP NULL DEFAULT NULL,
+	`createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 INSERT INTO food_type (type_name) VALUES
@@ -207,3 +300,7 @@ LEFT JOIN `rate_res` ON `users`.`user_id` = `rate_res`.`user_id`
 WHERE `orders`.`user_id` IS NULL 
 AND `like_res`.`user_id` IS NULL 
 AND `rate_res`.`user_id` IS NULL;
+
+
+SELECT * 
+FROM `users`
